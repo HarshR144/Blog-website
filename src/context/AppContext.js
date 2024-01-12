@@ -2,26 +2,27 @@ import { createContext, useState } from "react";
 import {baseUrl} from '../baseUrl'
 // S1
 export const AppContext = createContext();
-function AppContextProvider({children}){
-    const [loading ,setLoading] = useState(false);
+
+export default function AppContextProvider({children}){
+    const [loading , setLoading] = useState(false);
     const [posts,setPosts] = useState([]);
-    const [currentPage,setCurrentPage] = useState(1);
+    const [page,setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(null);
 
     // Data
-    async function fetchBlogPosts(page=1){
+    async function fetchBlogPosts(page){
         setLoading(true);
-        const url = `${baseUrl}`;
+        let url = `${baseUrl}?page=${page}`;
         try{
             
-            const fetchResult = await fetch(url);
-            const data = await fetchResult.json();
-            setCurrentPage(data.page);
+            const result = await fetch(url);
+            const data = await result.json();
+            setPage(data.page);
             setPosts(data.posts);
             setTotalPages(data.totalPages);
         }catch(e){
             console.log("Error in fetching data ");
-            setCurrentPage(1);
+            setPage(1);
             setPosts([]);
             setTotalPages(null);
         }
@@ -29,9 +30,9 @@ function AppContextProvider({children}){
 
     }
 
-    function handlePageChange(gotoPage){
-        setCurrentPage(gotoPage);
-        fetchBlogPosts(gotoPage); 
+    function handlePageChange(Page){
+        setPage(Page);
+        fetchBlogPosts(Page); 
     }
 
     const value = {
@@ -39,8 +40,8 @@ function AppContextProvider({children}){
         setPosts,
         loading,
         setLoading,
-        currentPage,
-        setCurrentPage,
+        page,
+        setPage,
         totalPages,
         setTotalPages,
         fetchBlogPosts,
@@ -49,7 +50,6 @@ function AppContextProvider({children}){
 // S2
     return <AppContext.Provider value={value}>
         {children}
-    </AppContext.Provider>
+    </AppContext.Provider>;
 }
 
-export default AppContextProvider;

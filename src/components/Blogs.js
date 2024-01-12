@@ -9,7 +9,7 @@ const Blogs = () => {
       {
         loading ? (<Spinner/>) : 
         (
-          posts.length === 0 ? <p>No post Found</p> : posts.map((post)=>(
+          posts.length === 0 ? <p className="font-bold text-3xl text-center my-[200px]">No post Found</p> : posts.map((post)=>(
              <div key={post.id}>
                 <p className='font-bold text-lg '>{post.title}</p>
                 <p className='text-sm mt-[4px]'>
